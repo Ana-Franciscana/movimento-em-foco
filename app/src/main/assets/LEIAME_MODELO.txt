@@ -1,0 +1,3 @@
+Coloque aqui o arquivo pose_landmarker_lite.task (MediaPipe Pose Landmarker).
+Ele NAO vem no repositorio (e ignorado pelo .gitignore).
+No Windows, na raiz do projeto:  powershell -ExecutionPolicy Bypass -File scripts\baixar_modelo.ps1
