@@ -33,6 +33,9 @@ object AnaliseJson {
                     put("detectado", q.detectado)
                     q.anguloEsquerdo?.let { put("anguloEsquerdo", it) }
                     q.anguloDireito?.let { put("anguloDireito", it) }
+                    if (q.extras.isNotEmpty()) {
+                        put("extras", JSONObject().apply { q.extras.forEach { (nome, graus) -> put(nome, graus) } })
+                    }
                 })
             }
         })
@@ -60,6 +63,9 @@ object AnaliseJson {
                     detectado = q.getBoolean("detectado"),
                     anguloEsquerdo = if (q.has("anguloEsquerdo")) q.getDouble("anguloEsquerdo") else null,
                     anguloDireito = if (q.has("anguloDireito")) q.getDouble("anguloDireito") else null,
+                    extras = q.optJSONObject("extras")?.let { e ->
+                        e.keys().asSequence().associateWith { chave -> e.getDouble(chave) }
+                    } ?: emptyMap(),
                 )
             },
         )

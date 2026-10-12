@@ -62,7 +62,7 @@ fun NovaAnaliseScreen(
         ) {
             Text("Nova análise", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
 
-            Card(colors = CardDefaults.cardColors(containerColor = AzulClaro)) {
+            Card(colors = CardDefaults.cardColors(containerColor = AzulClaro, contentColor = br.com.movimentoemfoco.app.ui.theme.TextoEscuro)) {
                 Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text("Antes de começar", style = MaterialTheme.typography.titleSmall)
                     Text(

@@ -26,6 +26,18 @@ object Landmarks {
     const val TORNOZELO_ESQ = 27
     const val TORNOZELO_DIR = 28
 
+    const val OMBRO_ESQ = 11
+
+    const val OMBRO_DIR = 12
+
+    const val COTOVELO_ESQ = 13
+
+    const val COTOVELO_DIR = 14
+
+    const val PUNHO_ESQ = 15
+
+    const val PUNHO_DIR = 16
+
     /** Primeiro índice do corpo (0..10 são pontos do rosto, que não desenhamos). */
     const val PRIMEIRO_CORPO = 11
 
@@ -57,6 +69,7 @@ data class QuadroResultado(
     val detectado: Boolean,
     val anguloEsquerdo: Double?,
     val anguloDireito: Double?,
+    val extras: Map<String, Double> = emptyMap(),
 )
 
 data class AnaliseResultado(

@@ -56,7 +56,7 @@ fun ResultadoScreen(
                 IndicadorQualidade(
                     analise.qualidade,
                     "${analise.quadrosValidos} de ${analise.quadrosAnalisados} quadro(s) com ângulo do joelho válido; " +
-                        "pessoa detectada em ${analise.quadrosComPessoa}.",
+                            "pessoa detectada em ${analise.quadrosComPessoa}.",
                 )
             }
             item { Text(analise.resumo, style = MaterialTheme.typography.bodyMedium) }
@@ -85,20 +85,27 @@ fun ResultadoScreen(
             }
 
             item {
-                Card(colors = CardDefaults.cardColors(containerColor = AzulClaro)) {
+                Card(colors = CardDefaults.cardColors(containerColor = AzulClaro, contentColor = br.com.movimentoemfoco.app.ui.theme.TextoEscuro)) {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text("Como ler este resultado", style = MaterialTheme.typography.titleSmall)
                         Text(
                             "Os pontos verdes/azuis são os keypoints estimados pelo modelo; só aparecem os que têm " +
-                                "confiança suficiente. O ângulo do joelho é calculado a partir de quadril, joelho e " +
-                                "tornozelo no plano 2D da imagem, então depende do ângulo da câmera, de partes " +
-                                "escondidas e do enquadramento. Quando um ponto não é confiável, nenhum ângulo é " +
-                                "mostrado. São valores observados nos quadros, não uma avaliação de técnica.",
+                                    "confiança suficiente. O ângulo do joelho é calculado a partir de quadril, joelho e " +
+                                    "tornozelo no plano 2D da imagem, então depende do ângulo da câmera, de partes " +
+                                    "escondidas e do enquadramento. Quando um ponto não é confiável, nenhum ângulo é " +
+                                    "mostrado. São valores observados nos quadros, não uma avaliação de técnica.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Text(
+                            "Também mostramos, do mesmo lado do joelho: Quadril (ombro–quadril–joelho), " +
+                                    "Inclinação do tronco (quadril→ombro em relação à horizontal; 0° = deitado, " +
+                                    "90° = em pé), Ombro (quadril–ombro–cotovelo) e Cotovelo (ombro–cotovelo–punho). " +
+                                    "A inclinação só faz sentido com o celular em pé e o chão na horizontal.",
                             style = MaterialTheme.typography.bodySmall,
                         )
                         Text(
                             "Protótipo educacional: não é ferramenta médica, não faz diagnóstico nem garante " +
-                                "execução correta ou prevenção de lesões.",
+                                    "execução correta ou prevenção de lesões.",
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -119,5 +126,8 @@ private fun descricaoAngulos(q: QuadroResultado): String {
     if (!q.detectado) return "Pessoa não detectada neste quadro."
     val esq = q.anguloEsquerdo?.let { ResumoAnalise.graus(it) } ?: "sem dados confiáveis"
     val dir = q.anguloDireito?.let { ResumoAnalise.graus(it) } ?: "sem dados confiáveis"
-    return "Joelho esquerdo: $esq · Joelho direito: $dir"
+    val joelhos = "Joelho esquerdo: $esq · Joelho direito: $dir"
+    if (q.extras.isEmpty()) return joelhos
+    val extras = q.extras.entries.joinToString(" · ") { (nome, graus) -> "$nome: ${ResumoAnalise.graus(graus)}" }
+    return "$joelhos\n$extras"
 }

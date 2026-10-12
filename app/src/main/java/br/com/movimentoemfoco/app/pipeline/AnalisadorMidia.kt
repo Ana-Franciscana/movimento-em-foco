@@ -73,6 +73,8 @@ class AnalisadorMidia(
             val lado = LadoPrincipal.escolher(listOf(esq), listOf(dir))
             val principal = if (lado == Lado.ESQUERDO) esq else if (lado == Lado.DIREITO) dir else null
             val validos = if (lado != null) 1 else 0
+            val extrasImagem: Map<String, Double> =
+                if (lado != null) AngulosPose.superior(pose, lado) else emptyMap<String, Double>()
 
             onProgresso("Desenhando o esqueleto…", null)
             val anotada = SkeletonRenderer.anotar(original, pose)
@@ -91,9 +93,10 @@ class AnalisadorMidia(
                 quadrosValidos = validos,
                 qualidade = nivel,
                 ladoPrincipal = lado,
-                quadros = listOf(QuadroResultado(0, "quadro_0.jpg", true, esq?.graus, dir?.graus)),
+                quadros = listOf(QuadroResultado(0, "quadro_0.jpg", true, esq?.graus, dir?.graus, extrasImagem)),
                 resumo = ResumoAnalise.gerar(
                     TipoMidia.IMAGEM, 1, 1, validos, nivel, lado, principal?.graus, principal?.graus,
+                    extrasImagem.mapValues { it.value to it.value },
                 ),
             )
             repositorio.salvar(resultado)
@@ -159,6 +162,13 @@ class AnalisadorMidia(
             }
             val validos = serie.count { it != null }
             val angulos = serie.mapNotNull { it?.graus }
+            val extrasPorQuadro: List<Map<String, Double>> = poses.map { p ->
+                if (lado != null) AngulosPose.superior(p, lado) else emptyMap<String, Double>()
+            }
+            val faixasExtras: Map<String, Pair<Double, Double>> = extrasPorQuadro
+                .flatMap { it.entries }
+                .groupBy({ it.key }, { it.value })
+                .mapValues { (_, valores) -> valores.min() to valores.max() }
 
             val medidos = instantes.indices.map { i ->
                 QuadroMedido(i, instantes[i], poses[i] != null, serie[i]?.graus)
@@ -179,7 +189,7 @@ class AnalisadorMidia(
                     repositorio.salvarMiniatura(pasta, anotada)
                     miniaturaSalva = true
                 }
-                quadros += QuadroResultado(instantes[i], nome, poses[i] != null, esq[i]?.graus, dir[i]?.graus)
+                quadros += QuadroResultado(instantes[i], nome, poses[i] != null, esq[i]?.graus, dir[i]?.graus, extrasPorQuadro[i])
                 bitmap.recycle()
                 anotada.recycle()
             }
@@ -203,6 +213,7 @@ class AnalisadorMidia(
                 quadros = quadros,
                 resumo = ResumoAnalise.gerar(
                     tipo, instantes.size, comPessoa, validos, nivel, lado, angulos.minOrNull(), angulos.maxOrNull(),
+                    faixasExtras,
                 ),
             )
             repositorio.salvar(resultado)

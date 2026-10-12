@@ -93,7 +93,7 @@ fun HomeScreen(
                 }
             }
             item {
-                Card(colors = CardDefaults.cardColors(containerColor = VerdeClaro)) {
+                Card(colors = CardDefaults.cardColors(containerColor = VerdeClaro, contentColor = br.com.movimentoemfoco.app.ui.theme.TextoEscuro)) {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text("Como funciona", style = MaterialTheme.typography.titleSmall)
                         Text(

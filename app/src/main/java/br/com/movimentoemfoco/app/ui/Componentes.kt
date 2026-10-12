@@ -103,7 +103,7 @@ fun IndicadorQualidade(nivel: NivelQualidade, detalhe: String, modifier: Modifie
 fun VideoReferencia(modifier: Modifier = Modifier) {
     val contexto = LocalContext.current
     val recurso = remember { contexto.resources.getIdentifier("video_referencia", "raw", contexto.packageName) }
-    Card(modifier = modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F8FA))) {
+    Card(modifier = modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F8FA), contentColor = br.com.movimentoemfoco.app.ui.theme.TextoEscuro)) {
         Column(Modifier.padding(12.dp)) {
             Text("Vídeo de referência", style = MaterialTheme.typography.titleSmall)
             if (recurso == 0) {
@@ -119,9 +119,11 @@ fun VideoReferencia(modifier: Modifier = Modifier) {
                         VideoView(c).apply {
                             setVideoURI(Uri.parse("android.resource://${c.packageName}/$recurso"))
                             setMediaController(MediaController(c))
+                            seekTo(1)
                         }
                     },
                 )
+                Text("Toque no vídeo para reproduzir.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
             }
         }
     }
